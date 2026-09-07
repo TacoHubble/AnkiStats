@@ -25,26 +25,28 @@ def run():
 
         try:
             # 1. Navigate to login
-            page.goto("https://ankiweb.net/account/login", wait_until="domcontentloaded")
-            
-            # Wait a few seconds to let any JS challenge render
-            page.wait_for_timeout(5000)
+            page.goto("https://ankiweb.net/account/login", wait_until="networkidle")
 
-            # 2. Fill login form with broader selectors
-            page.wait_for_selector("input", timeout=15000)
-            
-            user_input = page.locator("input#username, input[name='username'], input[type='email'], input.form-control, input").first
-            user_input.fill(USERNAME)
+            # 2. Locate inputs and simulate keystrokes so Svelte enables the submit button
+            email_input = page.locator("input[placeholder='Email'], input[autocomplete='username'], input[type='text']").first
+            password_input = page.locator("input[placeholder='Password'], input[type='password']").first
 
-            pass_input = page.locator("input#password, input[name='password'], input[type='password']").nth(1) if page.locator("input[type='password']").count() > 1 else page.locator("input#password, input[name='password'], input[type='password']").first
-            pass_input.fill(PASSWORD)
+            email_input.wait_for(state="visible", timeout=15000)
+            email_input.click()
+            email_input.press_sequentially(USERNAME, delay=30)
 
-            submit_btn = page.locator("button[type='submit'], input[type='submit'], button:has-text('Log in'), button:has-text('Login')").first
-            submit_btn.click()
+            password_input.click()
+            password_input.press_sequentially(PASSWORD, delay=30)
 
-            page.wait_for_load_state("networkidle")
+            # Wait for the submit button to become enabled
+            submit_btn = page.locator("button:has-text('Log In'), button[type='submit']").first
+            submit_btn.wait_for(state="visible", timeout=5000)
 
-            # 3. Navigate to dashboard
+            # Click submit and wait for navigation away from the login page
+            with page.expect_navigation(url=lambda u: "account/login" not in u, timeout=20000):
+                submit_btn.click()
+
+            # 3. Navigate to shared items dashboard
             page.goto("https://ankiweb.net/shared/mine", wait_until="networkidle")
             page.wait_for_selector("table", timeout=15000)
 
@@ -75,7 +77,6 @@ def run():
             print(f"Scrape successful! Total downloads: {total_downloads}")
 
         except Exception as e:
-            # Take a screenshot and save page content for debugging if it fails
             os.makedirs("debug", exist_ok=True)
             page.screenshot(path="debug/error_screenshot.png", full_page=True)
             with open("debug/error_page.html", "w", encoding="utf-8") as f:
