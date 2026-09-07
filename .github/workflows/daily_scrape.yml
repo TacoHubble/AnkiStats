@@ -2,8 +2,8 @@ name: Update AnkiWeb Stats
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # Runs daily at 06:00 UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 6 * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -27,6 +27,13 @@ jobs:
           ANKIWEB_USER: ${{ secrets.ANKIWEB_USER }}
           ANKIWEB_PASS: ${{ secrets.ANKIWEB_PASS }}
         run: python scrape.py
+
+      - name: Upload Debug Artifacts on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-debug-logs
+          path: debug/
 
       - name: Commit and push changes
         run: |
