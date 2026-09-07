@@ -6,9 +6,12 @@ from playwright.sync_api import sync_playwright
 USERNAME = os.environ.get("ANKIWEB_USER", "").strip()
 PASSWORD = os.environ.get("ANKIWEB_PASS", "").strip()
 
+# Explicitly tracked add-ons
 TRACKED_TITLES = [
     "Edit While Reviewing 🚀",
+    "Gamepad/Controller Mapper",
     "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)",
+    "PeerNotes: Collaborative Flashcard Notes",
 ]
 
 def run():
@@ -24,10 +27,9 @@ def run():
         page = context.new_page()
 
         try:
-            # 1. Navigate to login
+            # 1. Login
             page.goto("https://ankiweb.net/account/login", wait_until="networkidle")
 
-            # 2. Locate inputs and simulate keystrokes so Svelte enables the submit button
             email_input = page.locator("input[placeholder='Email'], input[autocomplete='username'], input[type='text']").first
             password_input = page.locator("input[placeholder='Password'], input[type='password']").first
 
@@ -38,20 +40,18 @@ def run():
             password_input.click()
             password_input.press_sequentially(PASSWORD, delay=30)
 
-            # Wait for the submit button to become enabled
             submit_btn = page.locator("button:has-text('Log In'), button[type='submit']").first
             submit_btn.wait_for(state="visible", timeout=5000)
 
-            # Click submit and wait for navigation away from the login page
             with page.expect_navigation(url=lambda u: "account/login" not in u, timeout=20000):
                 submit_btn.click()
 
-            # 3. Navigate to shared items dashboard
+            # 2. Shared Dashboard
             page.goto("https://ankiweb.net/shared/mine", wait_until="networkidle")
             page.wait_for_selector("table", timeout=15000)
 
             rows = page.query_selector_all("table tr")
-            addon_counts = {}
+            item_counts = {}
             total_downloads = 0
 
             for row in rows:
@@ -60,19 +60,21 @@ def run():
                     title = cells[1]
                     downloads_raw = cells[4]
 
-                    if any(tracked.lower() in title.lower() for tracked in TRACKED_TITLES):
+                    # Match tracked titles (case-insensitive substring/equality)
+                    if any(tracked.strip().lower() in title.strip().lower() for tracked in TRACKED_TITLES):
                         match = re.search(r"\d+", downloads_raw.replace(",", ""))
                         count = int(match.group(0)) if match else 0
-                        addon_counts[title] = count
+                        item_counts[title] = count
                         total_downloads += count
 
             payload = {
                 "total_downloads": total_downloads,
-                "breakdown": addon_counts
+                "breakdown": item_counts
             }
 
+            # Write clean UTF-8 output
             with open("stats.json", "w", encoding="utf-8") as f:
-                json.dump(payload, f, indent=2)
+                json.dump(payload, f, indent=2, ensure_ascii=False)
 
             print(f"Scrape successful! Total downloads: {total_downloads}")
 
