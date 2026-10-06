@@ -8,7 +8,7 @@ PASSWORD = os.environ.get("ANKIWEB_PASS", "").strip()
 
 # Explicitly tracked add-ons
 TRACKED_TITLES = [
-    "Edit While Reviewing 🚀",
+    "DirectEdit",
     "Gamepad/Controller Mapper",
     "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)",
     "PeerNotes: Collaborative Flashcard Notes",
