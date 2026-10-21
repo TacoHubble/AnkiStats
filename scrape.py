@@ -14,6 +14,8 @@ TRACKED_TITLES = [
     "PeerNotes: Collaborative Flashcard Notes",
     "The Focus Addon",
     "Placeholder",
+    "The Frameless Addon",
+    "The Widget Addon",
 ]
 
 def run():
