@@ -11,7 +11,7 @@ TRACKED_TITLES = [
     "DirectEdit",
     "Gamepad/Controller Mapper",
     "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)",
-    "PeerNotes: Collaborative Flashcard Notes",
+    "The Notes Addon: AI and Notes Companion",
     "The Focus Addon",
     "Placeholder",
     "The Frameless Addon",
