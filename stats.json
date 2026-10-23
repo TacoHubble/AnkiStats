@@ -1,13 +1,13 @@
 {
-  "total_downloads": 5335,
+  "total_downloads": 5370,
   "breakdown": {
     "DirectEdit": 171,
-    "Gamepad/Controller Mapper": 519,
-    "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)": 4409,
-    "PeerNotes: Collaborative Flashcard Notes": 75,
-    "Placeholder": 107,
+    "Gamepad/Controller Mapper": 528,
+    "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)": 4419,
+    "PeerNotes: Collaborative Flashcard Notes": 83,
+    "Placeholder": 108,
     "The Focus Addon": 29,
-    "The Frameless Addon": 14,
-    "The Widget Addon": 11
+    "The Frameless Addon": 17,
+    "The Widget Addon": 15
   }
 }
