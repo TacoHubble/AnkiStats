@@ -1,13 +1,13 @@
 {
-  "total_downloads": 5844,
+  "total_downloads": 5896,
   "breakdown": {
-    "DirectEdit": 208,
-    "Gamepad/Controller Mapper": 741,
-    "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)": 4499,
+    "DirectEdit": 209,
+    "Gamepad/Controller Mapper": 764,
+    "Generic-to-Brand Names (With AnkiMobile/AnkiDroid Support)": 4504,
     "Placeholder": 111,
-    "The Focus Addon": 70,
-    "The Frameless Addon": 37,
-    "The Notes Addon: AI and Notes Companion": 121,
-    "The Widget Addon": 57
+    "The Focus Addon": 78,
+    "The Frameless Addon": 40,
+    "The Notes Addon: AI and Notes Companion": 127,
+    "The Widget Addon": 63
   }
 }
